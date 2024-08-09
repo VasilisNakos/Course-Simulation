@@ -1,0 +1,103 @@
+/* styles.css */
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#box1 {
+    width: 100%;
+    height: 100px;
+    background-color: #333; /* Χρώμα φόντου */
+    text-align: center;
+    line-height: 50px;
+    color: white;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    width: 100%;
+    min-height: calc(100vh - 100px); /* Υπολογίζει το ύψος του container ως 100% του ύψους της οθόνης - το ύψος του box1 */
+}
+
+
+#box2 {
+    display: flex;
+    align-items:flex-start;
+    justify-content:flex-start;
+    background-color: white;
+}
+
+#box2 nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center; /* Κεντράρει τα στοιχεία */
+}
+
+#box2 nav a {
+    text-align: left;
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+    display: block; /* Κάνει τα links block για να πάρουν το πλήρες πλάτος του box2 */
+    padding: 0%; /* Προσθέτει padding για ευκολία στο κλικ */
+    margin-bottom: 90px; /* Προσαρμογή της απόστασης μεταξύ των στοιχείων */
+}
+
+#box3 {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    background-color: white;
+}
+
+
+#box3 form label {
+    display: inline-block;
+    margin-bottom: 5px; /* Προσθήκη κενού ανάμεσα στα labels */
+}
+
+#box3 form input,
+#box3 form textarea {
+    display: inline-block;
+}
+
+.announcement {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color:white;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+p {
+    font-size: 20px;
+}
