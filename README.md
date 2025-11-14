@@ -1,29 +1,29 @@
-Πλατφόρμα εκπαιδευτικού περιβάλλοντος
-Ανέπτυξα μια εκπαιδευτική πλατφόρμα για ανακοινώσεις, διαμοιρασμό εγγράφων,
-διαχείριση εργασιών και επικοινωνία φοιτητών-καθηγητών στο πλαίσιο
-πανεπιστημιακού μαθήματος.
-Τεχνολογίες:
-• Back-End: PHP (διαχείριση χρηστών, CRUD λειτουργίες)
-• Front-End: HTML, CSS, JavaScript (UI/UX)
-• Database: MySQL (διαχείριση δεδομένων)
-Χαρακτηριστικά:
-27
-05 Σύστημα εγγραφής/σύνδεσης χρηστών (ρόλοι: φοιτητές & καθηγητές)
-27
-05 Ανάρτηση ανακοινώσεων & διαμοιρασμός εγγράφων
-27
-05 Διαχείριση εργασιών (υποβολή & αξιολόγηση)
-27
-05 Επικοινωνία μέσω email
+# Educational Environment Platform
 
-Website link: http://vasinako.webpages.auth.gr/4041partB/login.php
+An educational platform was developed for announcements, document sharing,  
+assignment management, and communication between students and instructors within the framework  
+of a university course.
 
-Στοιχεία για πρόσβαση χρηστών:
-Profile πρόσβασης στην βάση δεδομένων:  login: Vasileios  password: ergasia123
-Role:Student   Loginame: petrospanopoulos@gmail.com  Password: diadiktyo1234
-Role:Student   Loginame: thanasis4@gmail.com   Password: ekpaideytika1234
-Role:Tutor  Loginame: vasilisnakos2002@gmail.com   Password: mathima1234
+## Technologies:
+* **Back-End:** PHP (User Management, CRUD operations)
+* **Front-End:** HTML, CSS, JavaScript (UI/UX)
+* **Database:** MySQL (Database Management)
 
+## Features:
+
+1. User Registration/Login System (Roles: Students & Instructors)
+2. Posting Announcements & Document Sharing
+3. Assignment Management (Submission & Evaluation)
+4. Email Communication
+
+---
+
+**Website link:** [http://vasinako.webpages.auth.gr/4041partΒ/login.php](http://vasinako.webpages.auth.gr/4041partΒ/login.php)
+
+## User Access Credentials:
+* **Role: Student** Loginame: `petrospanopoulos@gmail.com` Password: `diadiktyo1234`
+* **Role: Student** Loginame: `thanasis4@gmail.com` Password: `ekpaideytika1234`
+* **Role: Tutor** Loginame: `vasilisnakos2002@gmail.com` Password: `mathima1234`
 Περιγραφή Υλοποιήσεων:
 add_announcement.php:  Το αρχείο add_announcement.php είναι υπεύθυνο για τη δημιουργία και προσθήκη νέων ανακοινώσεων στη βάση δεδομένων του συστήματος. Περιλαμβάνει τόσο την HTML φόρμα για την εισαγωγή των ανακοινώσεων όσο και τον κώδικα PHP για την αποθήκευση αυτών των δεδομένων στη βάση.
 
