@@ -18,7 +18,7 @@ of a university course.
 
 ---
 
-**Website link:** [http://vasinako.webpages.auth.gr/4041partΒ/login.php](http://vasinako.webpages.auth.gr/4041partΒ/login.php)
+**Website link:** [http://vasinako.webpages.auth.gr/4041partΒ](http://vasinako.webpages.auth.gr/4041partΒ)
 
 ## User Access Credentials:
 * **Role: Student** Loginame: `petrospanopoulos@gmail.com` Password: `diadiktyo1234`
