@@ -1,6 +1,28 @@
-Εκπαιδευτικά Περιβάλλοντα Διαδικτύου
-Εργασία Μέρος B
-Ονοματεπώνυμο: Νάκος Βασίλειος   ΑΕΜ: 4041
+Πλατφόρμα εκπαιδευτικού περιβάλλοντος
+Ανέπτυξα μια εκπαιδευτική πλατφόρμα για ανακοινώσεις, διαμοιρασμό εγγράφων,
+διαχείριση εργασιών και επικοινωνία φοιτητών-καθηγητών στο πλαίσιο
+πανεπιστημιακού μαθήματος.
+Τεχνολογίες:
+• Back-End: PHP (διαχείριση χρηστών, CRUD λειτουργίες)
+• Front-End: HTML, CSS, JavaScript (UI/UX)
+• Database: MySQL (διαχείριση δεδομένων)
+Χαρακτηριστικά:
+27
+05 Σύστημα εγγραφής/σύνδεσης χρηστών (ρόλοι: φοιτητές & καθηγητές)
+27
+05 Ανάρτηση ανακοινώσεων & διαμοιρασμός εγγράφων
+27
+05 Διαχείριση εργασιών (υποβολή & αξιολόγηση)
+27
+05 Επικοινωνία μέσω email
+
+Website link: http://vasinako.webpages.auth.gr/4041partB/login.php
+
+Στοιχεία για πρόσβαση χρηστών:
+Profile πρόσβασης στην βάση δεδομένων:  login: Vasileios  password: ergasia123
+Role:Student   Loginame: petrospanopoulos@gmail.com  Password: diadiktyo1234
+Role:Student   Loginame: thanasis4@gmail.com   Password: ekpaideytika1234
+Role:Tutor  Loginame: vasilisnakos2002@gmail.com   Password: mathima1234
 
 Περιγραφή Υλοποιήσεων:
 add_announcement.php:  Το αρχείο add_announcement.php είναι υπεύθυνο για τη δημιουργία και προσθήκη νέων ανακοινώσεων στη βάση δεδομένων του συστήματος. Περιλαμβάνει τόσο την HTML φόρμα για την εισαγωγή των ανακοινώσεων όσο και τον κώδικα PHP για την αποθήκευση αυτών των δεδομένων στη βάση.
@@ -52,12 +74,7 @@ Styles.css: Το αρχείο styles.css παρέχει τον στιλιστι�
 
 4.user: Ο πίνακας αυτός χρησιμοποιείται για τη διαχείριση των χρηστών και των διαπιστευτηρίων τους στο σύστημα. Περιλαμβάνει όλες τις απαραίτητες πληροφορίες τους για την αυθεντικοποίηση και τον έλεγχο πρόσβασης .
 
-Στοιχεία για πρόσβαση χρηστών:
-Profile πρόσβασης στην βάση δεδομένων:  login: Vasileios  password: ergasia123
-Role:Student   Loginame: petrospanopoulos@gmail.com  Password: diadiktyo1234
-Role:Student   Loginame: thanasis4@gmail.com   Password: ekpaideytika1234
-Role:Tutor  Loginame: vasilisnakos2002@gmail.com   Password: mathima1234
-Link δυναμικού ιστοχώρου: vasinako.webpages.auth.gr/4041partB/
+
 
 
 
