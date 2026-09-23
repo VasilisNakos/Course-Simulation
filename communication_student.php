@@ -1,5 +1,37 @@
+<?php
+require_once __DIR__ . '/includes/auth.php';
+requireRole('Student');
+
+define('TUTOR_EMAIL', 'tutor@csd.auth.test.gr');
+
+$message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCsrf();
+
+    $sender = trim($_POST['sender'] ?? '');
+    $subject = trim($_POST['subject'] ?? '');
+    $body = trim($_POST['message'] ?? '');
+
+    if (!filter_var($sender, FILTER_VALIDATE_EMAIL)) {
+        $message = 'Παρακαλώ εισάγετε έγκυρη διεύθυνση email αποστολέα.';
+    } elseif ($subject === '' || $body === '') {
+        $message = 'Συμπληρώστε θέμα και κείμενο.';
+    } else {
+        $headers = 'From: ' . $sender . "\r\n" .
+                   'Reply-To: ' . $sender . "\r\n" .
+                   'X-Mailer: PHP/' . phpversion();
+
+        if (@mail(TUTOR_EMAIL, $subject, $body, $headers)) {
+            $message = 'Το email στάλθηκε με επιτυχία.';
+        } else {
+            $message = 'Η αποστολή email απέτυχε. Χρησιμοποιήστε τη διεύθυνση mailto παρακάτω.';
+        }
+    }
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,75 +39,40 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+
     <div id="box1"><h1>Επικοινωνία</h1></div>
     <div id="container">
-        <div id="box2"><nav>
-            <ul>
-                <li><a href="index_student.php">Αρχική σελίδα</a></li>
-                <li><a href="announcement_student.php">Ανακοινώσεις</a></li>
-                <li><a href="communication_student.php">Επικοινωνία</a></li>
-                <li><a href="documents_student.php">Έγραφα μαθήματος</a></li>
-                <li><a href="homework_student.php">Εργασίες</a></li>
-            </ul>
-        </nav>
-        </div>
+        <div id="box2"><?php include __DIR__ . '/includes/nav_student.php'; ?></div>
         <div id="box3">
-            <p> Η συγκεκριμένη ιστοσελίδα θα περιέχει δύο δυνατότητες για την αποστολή email στον καθηγητή:</p>
+            <p>Η συγκεκριμένη ιστοσελίδα θα περιέχει δύο δυνατότητες για την αποστολή email στον καθηγητή:</p>
             <ul>
-                <li>Μέσω web φόρμας </li>
-                <li> Με χρήση email διεύθυνσης </li>
+                <li>Μέσω web φόρμας</li>
+                <li>Με χρήση email διεύθυνσης</li>
             </ul>
             <h2 style="font-size: 20px;"><span style="color: green;">Αποστολή e-mail μέσω web φόρμας</span></h2>
 
-                <form action="sendmail.php" method="post" enctype="text/plain">
-                    <label for="sender">Αποστολέας:</label>
-                    <input type="text" id="sender" name="sender" required style="margin-bottom: 30px;"><br>
+            <?php if ($message !== ''): ?>
+                <p><?php echo h($message); ?></p>
+            <?php endif; ?>
 
-                    <label for="subject">Θέμα:</label>
-                    <input type="text" id="subject" name="subject" required style="margin-bottom: 30px;"><br>
+            <form action="communication_student.php" method="post">
+                <?php echo csrfField(); ?>
+                <label for="sender">Αποστολέας:</label>
+                <input type="email" id="sender" name="sender" required style="margin-bottom: 30px;"><br>
 
-                    <label for="message">Κείμενο:</label>
-                    <textarea id="message" name="message" required style="margin-bottom: 0px;"></textarea><br>
-            
-                    <input type="submit" value="Αποστολή">
-                </form>
+                <label for="subject">Θέμα:</label>
+                <input type="text" id="subject" name="subject" required style="margin-bottom: 30px;"><br>
+
+                <label for="message">Κείμενο:</label>
+                <textarea id="message" name="message" required style="margin-bottom: 0px;"></textarea><br>
+
+                <input type="submit" value="Αποστολή">
+            </form>
+
             <h2 style="font-size: 20px;"><span style="color: green;">Αποστολή e-mail με χρήση e-mail διεύθυνσης</span></h2>
-            <p>Εναλλακτικά, μπορείτε να αποστείλετε e-mail στην παρακάτω διεύθυνση ηλεκτρονικού ταχυδρομείου: <a href="mailto:tutor@csd.auth.test.gr">tutor@csd.auth.test.gr</a></p>
+            <p>Εναλλακτικά, μπορείτε να αποστείλετε e-mail στην παρακάτω διεύθυνση ηλεκτρονικού ταχυδρομείου: <a href="mailto:<?php echo h(TUTOR_EMAIL); ?>"><?php echo h(TUTOR_EMAIL); ?></a></p>
         </div>
     </div>
 
 </body>
 </html>
-
-<?php
-// Σύνδεση με τη βάση δεδομένων
-include_once('db_connection.php');
-
-// Λήψη των πιστοποιημένων καθηγητών από τη βάση δεδομένων
-$sql = "SELECT email FROM user WHERE role = 'Tutor' AND certified = 1";
-
-$result = $conn->query($sql);
-
-// Έλεγχος αν υπάρχουν αποτελέσματα
-if ($result->num_rows > 0) {
-    // Στείλε email σε κάθε καθηγητή
-    while ($row = $result->fetch_assoc()) {
-        $to = $row['email'];
-        $subject = $_POST['subject'];
-        $message = $_POST['message'];
-        $headers = 'From: ' . $_POST['sender'];
-
-        // Αποστολή email
-        mail($to, $subject, $message, $headers);
-    }
-    echo "Το email στάλθηκε με επιτυχία σε όλους τους καθηγητές.";
-} else {
-    echo "Δεν βρέθηκαν πιστοποιημένοι καθηγητές.";
-}
-
-// Κλείσιμο σύνδεσης με τη βάση δεδομένων
-$conn->close();
-?>
-
-

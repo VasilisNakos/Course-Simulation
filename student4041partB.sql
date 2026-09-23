@@ -107,11 +107,13 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `Onoma` varchar(20) NOT NULL,
   `Epwnymo` varchar(20) NOT NULL,
   `Loginame` varchar(50) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `role` enum('Tutor','Student') NOT NULL,
+  PRIMARY KEY (`id`),
   UNIQUE KEY `Loginame` (`Loginame`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -122,7 +124,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('Petros','Panopoulos','petrospanopoulos@gmail.com','diadiktyo1234','Student'),('Thanasis','Ioannidis','thanasis4@gmail.com','ekpaideytika1234','Student'),('Vasilis','Nakos','vasilisnakos2002@gmail.com','mathima1234','Tutor');
+INSERT INTO `user` (`id`,`Onoma`,`Epwnymo`,`Loginame`,`password`,`role`) VALUES (1,'Petros','Panopoulos','petrospanopoulos@gmail.com','$2y$10$v1SwKQC7IC/icc3aRldDt.X2R7WbBSiubOkS0E3mluvKsft7z/Wei','Student'),(2,'Thanasis','Ioannidis','thanasis4@gmail.com','$2y$10$vz4XPBG4jslZiuCgPJ9h8udAuYLhZA.Nb24GTU5dRyTd2yXegDBBS','Student'),(3,'Vasilis','Nakos','vasilisnakos2002@gmail.com','$2y$10$OBzM1XcSqWA7LT.65iRDHuFgtY02tMEqCWWLjlxqEGFbpjQ/Sm.LK','Tutor');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
