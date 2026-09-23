@@ -1,5 +1,52 @@
+<?php
+
+require_once __DIR__ . '/includes/auth.php';
+
+$error = '';
+
+if (!empty($_SESSION['user_id'])) {
+    if (($_SESSION['role'] ?? '') === 'Tutor') {
+        header('Location: index_tutor.php');
+    } else {
+        header('Location: index_student.php');
+    }
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCsrf();
+    require_once __DIR__ . '/db_connection.php';
+
+    $loginame = trim($_POST['Loginame'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    $stmt = $conn->prepare('SELECT id, Loginame, password, role FROM user WHERE Loginame = ?');
+    $stmt->bind_param('s', $loginame);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+    $conn->close();
+
+    if ($user && password_verify($password, $user['password'])) {
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = (int)$user['id'];
+        $_SESSION['loginame'] = $user['Loginame'];
+        $_SESSION['role'] = $user['role'];
+
+        if ($user['role'] === 'Tutor') {
+            header('Location: index_tutor.php');
+        } else {
+            header('Location: index_student.php');
+        }
+        exit;
+    }
+
+    $error = 'Λανθασμένο όνομα χρήστη ή κωδικός πρόσβασης.';
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,69 +87,37 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        .error {
+            color: #b00020;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
 
- <div id="login-container">
+<div id="login-container">
     <h2>Πιστοποίηση</h2>
-    <form action="login.php" method="post">   
+    <?php if ($error !== ''): ?>
+        <p class="error"><?php echo h($error); ?></p>
+    <?php endif; ?>
+    <form action="login.php" method="post">
+        <?php echo csrfField(); ?>
         <div>
             <label for="Loginame">Username:</label>
             <input type="text" id="login" name="Loginame" required style="margin-bottom: 30px;"><br>
         </div>
-    
+
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-    
+
         <div>
             <input type="submit" id="login-button" value="Login">
         </div>
     </form>
-    
 </div>
-
-<?php
-
-
-// Σύνδεση με τη βάση δεδομένων
-$conn = new mysqli('webpagesdb.it.auth.gr:3306','Vasileios','ergasia123','student4041partB');
-
-session_start(); // Ξεκινάει τη συνεδρία
-
-// Έλεγχος αν ο χρήστης έχει υποβάλει τη φόρμα
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Πάρτε τις τιμές που υποβλήθηκαν από τη φόρμα εισόδου
-    $Loginame = $_POST['Loginame'];
-    $password = $_POST['password'];
-
-    // Εκτέλεση ερωτήματος στη βάση δεδομένων για επικύρωση του χρήστη
-    $sql = "SELECT * FROM user WHERE Loginame = '$Loginame' AND password = '$password'";
-    $result = mysqli_query($conn, $sql);
-
-    // Έλεγχος αν υπάρχει τουλάχιστον ένας χρήστης με αυτά τα στοιχεία
-    if (mysqli_num_rows($result) == 1) {
-        // Επιτυχής σύνδεση - ανάκατευθύνετε τον χρήστη στην κατάλληλη σελίδα ανάλογα με τον ρόλο του
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['role'] = $row['role'];
-        if ($row['role'] == 'Student' ) {
-            header('Location: index_student.php');
-            exit();
-        }
-         else if($row['role'] == 'Tutor'){
-            header('Location: index_tutor.php');
-            exit();
-        }
-        else{
-        // Αποτυχία επικύρωσης - εμφανίστε ένα μήνυμα σφάλματος
-        echo "Λανθασμένο όνομα χρήστη ή κωδικός πρόσβασης.";
-        }
-    }
-
-}
-?> 
 
 </body>
 </html>

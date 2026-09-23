@@ -1,10 +1,45 @@
+<?php
+
+require_once __DIR__ . '/includes/auth.php';
+requireRole('Tutor');
+
+$message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCsrf();
+    require_once __DIR__ . '/db_connection.php';
+
+    $title = $_POST['Title'] ?? '';
+    $descriptions = $_POST['descriptions'] ?? '';
+    $storedName = validateUploadedFile($_FILES['File_name'] ?? []);
+
+    if ($storedName === null) {
+        $message = 'Μη έγκυρο ή μη επιτρεπόμενο αρχείο.';
+    } elseif (!storeUploadedFile($_FILES['File_name'], $storedName)) {
+        $message = 'Σφάλμα κατά την μεταφορά του αρχείου.';
+    } else {
+        $stmt = $conn->prepare('INSERT INTO documents (Title, descriptions, File_name) VALUES (?, ?, ?)');
+        $stmt->bind_param('sss', $title, $descriptions, $storedName);
+
+        if ($stmt->execute()) {
+            $message = 'Το έγγραφο προστέθηκε επιτυχώς!';
+        } else {
+            deleteStoredFile($storedName);
+            $message = 'Σφάλμα κατά την προσθήκη του εγγράφου.';
+        }
+
+        $stmt->close();
+    }
+
+    $conn->close();
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add_document</title>
-</head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +49,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         #login-container {
@@ -22,18 +57,18 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 400px;
             text-align: center;
         }
 
-        input {
+        input, textarea {
             width: 100%;
             padding: 8px;
             margin: 8px 0;
             box-sizing: border-box;
         }
 
-        #login-button {
+        input[type="submit"] {
             background-color: #4caf50;
             color: #fff;
             border: none;
@@ -42,54 +77,23 @@
             cursor: pointer;
         }
     </style>
+</head>
 <body>
-<!-- Φόρμα προσθήκης νέας ανακοίνωσης -->
-<form action="add_document.php" method="post" enctype="multipart/form-data">
-    <label for="Title">Τίτλος:</label><br>
-    <input type="text" id="Title" name="Title" required><br>
-    <label for="descriptions">Περιγραφή:</label><br>
-    <textarea id="descriptions" name="descriptions" required></textarea><br>
-    <label for="File_name">Αρχείο:</label><br>
-    <input type="file" id="File_name" name="File_name" required><br>
-    <input type="submit" value="Υποβολή">
-</form>
-
-
-<?php
-// Σύνδεση με τη βάση δεδομένων
-include_once('db_connection.php');
-	
-// Εάν έχει υποβληθεί η φόρμα
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $Title = $_POST['Title'];
-    $descriptions = $_POST['descriptions'];
-    
-    // Πληροφορίες αρχείου
-    $file_name = $_FILES['File_name']['name'];
-    $file_tmp = $_FILES['File_name']['tmp_name'];
-    
-    $upload_directory = "Files/";  
-    $upload_file = $upload_directory . basename($file_name);
-
-    
-    // Μεταφορά του αρχείου στον τελικό προορισμό
-    if (move_uploaded_file($file_tmp, $upload_file)) {
-        // Εάν η μεταφορά αρχείου είναι επιτυχής, προσθέστε τα δεδομένα στη βάση δεδομένων
-        $sql = "INSERT INTO documents (Title, descriptions, File_name) VALUES ('$Title', '$descriptions', '$file_name')";
-        
-        if ($conn->query($sql) === TRUE) {
-            echo "Το έγγραφο προστέθηκε επιτυχώς!";
-        } else {
-            echo "Σφάλμα κατά την προσθήκη του εγγράφου: " . $conn->error;
-        }
-    } else {
-        echo "Σφάλμα κατά την μεταφορά του αρχείου.";
-    }
-}
-
-// Κλείσιμο σύνδεσης
-$conn->close();
-?>
-
+<div id="login-container">
+    <?php if ($message !== ''): ?>
+        <p><?php echo h($message); ?></p>
+    <?php endif; ?>
+    <form action="add_document.php" method="post" enctype="multipart/form-data">
+        <?php echo csrfField(); ?>
+        <label for="Title">Τίτλος:</label><br>
+        <input type="text" id="Title" name="Title" required><br>
+        <label for="descriptions">Περιγραφή:</label><br>
+        <textarea id="descriptions" name="descriptions" required></textarea><br>
+        <label for="File_name">Αρχείο:</label><br>
+        <input type="file" id="File_name" name="File_name" required accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.txt,.ppt,.pptx"><br>
+        <input type="submit" value="Υποβολή">
+    </form>
+    <p><a href="documents_tutor.php">Επιστροφή</a></p>
+</div>
 </body>
 </html>
